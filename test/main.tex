@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{natbib}
+\usepackage[acronym]{glossaries}
+
+\makeglossaries
+\newacronym{tl;dr}{tl;dr}{Too long; didn't read}
+
+\title{Testing mtneug/texlive}
+\author{Someone}
+\date{\today}
+
+\begin{document}
+  \maketitle
+  \clearpage
+
+  \printglossary[type=\acronymtype]
+  \clearpage
+
+  Here you see \citep{Someone2016} \acrfull{tl;dr}.
+  \clearpage
+
+  \bibliographystyle{alpha}
+  \bibliography{library}
+\end{document}
