@@ -14,7 +14,7 @@ Usage: build.sh [OPTIONS]
 
 Options:
 
-  -f, --file=main       Name of the tex file without file ending
+  -f, --file [FILE]     Name of the tex file without file ending (default: 'main')
   -b, --bibtex          Run bibtex
   -g, --glossaries      Run makeglossaries
   -w, --watch           Watch for changes

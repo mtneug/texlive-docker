@@ -26,7 +26,7 @@ printUsage() {
   echo
   echo "Options:"
   echo
-  echo "  -f, --file=main       Name of the tex file without file ending"
+  echo "  -f, --file [FILE]     Name of the tex file without file ending (default: 'main')"
   echo "  -b, --bibtex          Run bibtex"
   echo "  -g, --glossaries      Run makeglossaries"
   echo "  -w, --watch           Watch for changes"
