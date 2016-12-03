@@ -19,6 +19,8 @@ Options:
   -g, --glossaries      Run makeglossaries
   -w, --watch           Watch for changes
       --ignore-errors   Continue watching even if an error occurred
+  -t, --texmf [PATH]    Custom texmf folder path
+  -i, --init [FILE]     Name of the font to be initialized
   -h, --help            Print usage
 ```
 
@@ -28,6 +30,12 @@ command:
 
 ```sh
 $ docker run --rm -v $PWD:/doc mtneug/texlive -b -g -w --ignore-errors
+```
+
+This image comes with the possiblity to provide your own texmf folder with additional fonts etc. You can use it like this:
+
+```sh
+$ docker run --rm -v $PWD:/doc mtneug/texlive -f beamer -t texmf -i Font.map -b
 ```
 
 ## License
