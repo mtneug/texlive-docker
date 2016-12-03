@@ -22,6 +22,8 @@ IGNORE_ERRORS="false"
 WATCH="false"
 TEXMF="false"
 TEXMF_PATH=""
+INIT="false"
+INIT_FILE=""
 
 printUsage() {
   echo "Usage: build.sh [OPTIONS]"
@@ -32,20 +34,21 @@ printUsage() {
   echo "  -b, --bibtex          Run bibtex"
   echo "  -g, --glossaries      Run makeglossaries"
   echo "  -w, --watch           Watch for changes"
-  echo "      --ignore-errors   Continue watching even if an error occurred"
+  echo "      --ignore-errors   Continue watching even if an error occurred"  
+  echo "  -t, --texmf [PATH]    Custom texmf folder path"
+  echo "  -i, --init [FILE]     Name of the font to be initialized"
   echo "  -h, --help            Print usage"
-  echo "  -t, --texmf           Custom texmf folder"
 }
 
 runPdflatex() {
   if [[ "${TEXMF}" == "true" ]]; \
-  TEXMFHOME="${TEXMF_PATH}" \
+  then TEXMFHOME="${TEXMF_PATH}" \
   pdflatex \
     -interaction nonstopmode \
     -file-line-error \
     -synctex 1 \
     "${FILE}.tex"; \
-  then \
+  else \
     pdflatex \
       -interaction nonstopmode \
       -file-line-error \
@@ -61,13 +64,22 @@ runMakeglossaries() {
 
 runBibtex() {
   if [[ "${TEXMF}" == "true" ]]; \
-    TEXMFHOME="${TEXMF_PATH}" bibtex -terse "${FILE}.aux"; \
-  then bibtex -terse "${FILE}.aux"; fi;
+   then TEXMFHOME="${TEXMF_PATH}" bibtex -terse "${FILE}.aux"; \
+   else bibtex -terse "${FILE}.aux"; fi;
+}
+
+initTexmf(){
+  if [[ "${TEXMF}" == "true" ]]; \
+  then TEXMFHOME="${TEXMF_PATH}" mktexlsr \
+  && TEXMFHOME="${TEXMF_PATH}" updmap --enable Map "${INIT_FILE}";\
+  else mtexlsr \
+  && updmap --enable Map "${INIT_FILE}"; fi;\
 }
 
 run() {
   {
-       runPdflatex \
+    if [[ "${INIT}" == "true" ]]; then initTexmf; fi \
+    && runPdflatex \
     && runPdflatex \
     && if [[     "${BIBTEX}" == "true" ]]; then runBibtex; fi \
     && if [[ "${GLOSSARIES}" == "true" ]]; then runMakeglossaries; fi \
@@ -105,7 +117,6 @@ main() {
   fi
 }
 
-
 while [[ $# -gt 0 ]]; do
   opt="$1"
 
@@ -126,9 +137,14 @@ while [[ $# -gt 0 ]]; do
     --ignore-errors)
       IGNORE_ERRORS="true"
       ;;
-    --t|--texmf)
+    -t|--texmf)
       TEXMF="true"
       TEXMF_PATH="$2"
+      shift
+      ;;
+    -i|--init)
+      INIT="true"
+      INIT_FILE="$2"
       shift
       ;;
     -h|--help)
