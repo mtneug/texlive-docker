@@ -20,6 +20,8 @@ BIBTEX="false"
 GLOSSARIES="false"
 IGNORE_ERRORS="false"
 WATCH="false"
+TEXMF="false"
+TEXMF_PATH=""
 
 printUsage() {
   echo "Usage: build.sh [OPTIONS]"
@@ -32,14 +34,23 @@ printUsage() {
   echo "  -w, --watch           Watch for changes"
   echo "      --ignore-errors   Continue watching even if an error occurred"
   echo "  -h, --help            Print usage"
+  echo "  -t, --texmf           Custom texmf folder"
 }
 
 runPdflatex() {
+  if [[ "${TEXMF}" == "true" ]]; \
+  TEXMFHOME="${TEXMF_PATH}" \
   pdflatex \
     -interaction nonstopmode \
     -file-line-error \
     -synctex 1 \
-    "${FILE}.tex"
+    "${FILE}.tex"; \
+  then \
+    pdflatex \
+      -interaction nonstopmode \
+      -file-line-error \
+      -synctex 1 \
+      "${FILE}.tex"; fi;
 }
 
 runMakeglossaries() {
@@ -49,7 +60,9 @@ runMakeglossaries() {
 }
 
 runBibtex() {
-  bibtex -terse "${FILE}.aux"
+  if [[ "${TEXMF}" == "true" ]]; \
+    TEXMFHOME="${TEXMF_PATH}" bibtex -terse "${FILE}.aux"; \
+  then bibtex -terse "${FILE}.aux"; fi;
 }
 
 run() {
@@ -112,6 +125,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ignore-errors)
       IGNORE_ERRORS="true"
+      ;;
+    --t|--texmf)
+      TEXMF="true"
+      TEXMF_PATH="$2"
+      shift
       ;;
     -h|--help)
       printUsage
