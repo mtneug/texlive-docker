@@ -35,10 +35,12 @@ printUsage() {
 }
 
 runPdflatex() {
+  # shellcheck disable=SC2086
   pdflatex \
     -interaction nonstopmode \
     -file-line-error \
     -synctex 1 \
+    ${PDFLATEX_ARGS} \
     "${FILE}.tex"
 }
 
