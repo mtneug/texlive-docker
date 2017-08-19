@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM finalduty/archlinux:daily
+FROM ubuntu:17.04
 MAINTAINER Matthias Neugebauer <mtneug@mailbox.org>
 
 RUN groupadd \
@@ -23,11 +23,12 @@ RUN groupadd \
       --gid 1000 \
       --create-home \
       user \
- && pacman -Syyu --noconfirm \
-      texlive-most \
-      texlive-lang \
+ && apt-get update \
+ && apt-get install -y \
+      texlive-full \
       inotify-tools \
- && pacman -Scc --noconfirm
+      python-pygments \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh /build.sh
 
