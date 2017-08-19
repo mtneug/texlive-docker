@@ -46,6 +46,7 @@ runPdflatex() {
 
 runMakeglossaries() {
   for f in ./*.{glo,acn}; do
+    [ -f "$f" ] || continue
     makeglossaries -q "$f"
   done
 }
