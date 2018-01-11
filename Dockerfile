@@ -28,6 +28,7 @@ RUN groupadd \
       texlive-full \
       inotify-tools \
       python-pygments \
+      pandoc \
  && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh /build.sh
