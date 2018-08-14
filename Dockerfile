@@ -24,16 +24,15 @@ RUN groupadd \
       --create-home \
       user \
  && apt-get update \
- && apt-get install -y \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       texlive-full \
       inotify-tools \
       python-pygments \
       pandoc \
+      sudo \
  && rm -rf /var/lib/apt/lists/*
 
 COPY build.sh /build.sh
-
-USER user
 
 WORKDIR /doc
 VOLUME [ "/doc" ]

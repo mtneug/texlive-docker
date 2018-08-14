@@ -15,6 +15,11 @@
 
 set -e
 
+# Run this script with non-root user
+if [ "$(id -u)" == "0" ]; then
+  sudo -u user -E "$0" "$@"
+fi
+
 FILE="main"
 BIBTEX="false"
 GLOSSARIES="false"
